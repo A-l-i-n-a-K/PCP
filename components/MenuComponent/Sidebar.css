@@ -1,0 +1,41 @@
+.profile-sidebar {
+    width: 265px;
+    background-color: #1a2b3c;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    height: 830px;
+    position: fixed;
+    color: #fdf3e0;
+  }
+  
+  .sidebar-title {
+    font-size: 50px;
+    font-weight: bold;
+    color: #fdf3e0;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+  
+  .profile-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 50px;
+  }
+  
+  .menu-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+  }
+  
+  
+  .menu-exit {
+    margin-top: 70px; /* Увеличенное расстояние для нижнего блока */
+    width: 100%;
+  }

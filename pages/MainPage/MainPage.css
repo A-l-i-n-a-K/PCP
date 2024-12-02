@@ -1,0 +1,39 @@
+/* src/pages/MainPage/MainPage.css */
+.main-page {
+    text-align: center;
+    background-color: #1a2b3c;
+    color: #fdf3e0;
+  }
+  
+  .text-with-image {
+    display: flex;
+    align-items: center;
+    margin-top: 50px; 
+  }
+  
+  .text-content {
+    flex: 0 1 auto;
+    font-size: 24px; 
+    font-weight: 500;
+    text-align: left;
+    margin-left: 220px;
+  }
+  
+  .image-content img {
+    max-width: 45%;
+    height: auto;
+  }
+  
+  .pins {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-top: 85px;
+    padding-bottom: 45px;
+  } 
+
+  .features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  } 

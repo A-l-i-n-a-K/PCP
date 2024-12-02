@@ -1,0 +1,62 @@
+.psychologyTestPage-page {
+    display: flex;
+    height: 900px;
+    width: 1700px;
+    background-color: #fdf3e0;
+    position: fixed;
+    flex-direction: column;
+  }
+  
+  .psychologyTestPage-mainContent {
+    margin-left: 450px; 
+    padding-top: 65px;
+  }
+  
+  .psychologyTestPage-mainContent p {
+    font-size: 16pt;
+    color: #1a2b3c;
+  }
+  
+  .psychologyTestPage-row {
+    display: flex;
+    flex-direction: row;
+    gap: 160px;
+  }
+  
+  .psychologyTestPage-element {
+    display: flex;
+    flex-direction: column;
+    margin-top: 70px;
+  }
+
+  .psychologyTestPage-row-all {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+  }
+
+  .test-button {
+    margin-top: 70px;
+    margin-left: 220px;
+    background: linear-gradient(to right, #FFA006, #ff6941); 
+    color: #fdf3e0;
+    border: none;
+    outline: none; 
+    width: 160px; 
+    height: 42px; 
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+  
+  .test-button:hover { 
+    opacity: 0.8; 
+  }
+  
+  .psychologyTestPage-image {
+    width: 340px;
+    height: 470px;
+    margin-top: 80px;
+  }
+  

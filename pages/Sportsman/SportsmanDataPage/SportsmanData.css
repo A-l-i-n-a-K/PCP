@@ -1,0 +1,15 @@
+.sportsmanData-page {
+    display: flex;
+    height: 100%;
+    width: 1700px;
+    background-color: #fdf3e0;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .sportsmanData-row {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-top: 30px;
+  }

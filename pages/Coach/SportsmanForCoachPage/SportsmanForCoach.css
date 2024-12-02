@@ -1,0 +1,53 @@
+  .user-list-container {
+    text-align: center;
+    padding: 30px;
+    margin-left: 310px;
+    background-color: #fdf3e0;
+    min-height: 830px;
+  }
+  
+  .user-list-search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+    margin-top: 65px;
+    gap: 30px;
+  }
+
+  .user-list-search-bar input {
+    border-radius: 15px;
+    background-color: #E7E7E7;
+    border: none;
+    padding: 12px 15px;
+    width: 300px;
+    font-size: 16px;
+  }
+
+  .user-list-search-bar input:focus{
+    outline: none;
+    border: 2px solid #FFA006;
+  }
+
+  .user-list-search-bar button {
+    background: linear-gradient(to right, #FFA006, #ff6941); 
+    color: #fdf3e0;
+    border: none;
+    border-radius: 15px;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 160px; 
+    height: 42px; 
+  }
+  
+  .user-list-search-bar button:hover { 
+    opacity: 0.8; 
+  }
+  
+  .user-list-user-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: center;
+  }
+  

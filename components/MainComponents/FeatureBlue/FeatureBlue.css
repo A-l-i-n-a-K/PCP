@@ -1,0 +1,36 @@
+/* src/components/AdjustableComponent.css */
+.feature-component-blue{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 160px;
+  background-color: #1a2b3c;
+  color: #fdf3e0;
+  min-height: 350px; 
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.content-blue {
+  flex: 1;
+  text-align: left;
+  padding-left: 200px;
+  padding-right: 127px;
+}
+
+.content-blue h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.content-blue p {
+  font-size: 20px;
+}
+
+.image-container img {
+  max-width: 540px;
+  height: 300px;
+  padding-right: 157px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}

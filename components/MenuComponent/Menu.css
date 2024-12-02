@@ -1,0 +1,35 @@
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Расстояние между иконкой и текстом */
+  width: 100%;
+  transition: opacity 0.3s;
+  cursor: pointer;
+}
+
+.menu-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.menu-title {
+  font-size: 16pt;
+  color: #fdf3e0; /* Основной цвет текста */
+  flex: 1; /* Для выравнивания текста */
+  margin: 0px;
+}
+
+.menu-title-exit {
+  background: linear-gradient(to right, #FF5A87, #EC2727); /* Градиентный фон */
+  -webkit-background-clip: text; /* Применяем фон только к тексту */
+  -webkit-text-fill-color: transparent; /* Делаем текст прозрачным, чтобы был виден градиент */
+}
+
+
+.menu:hover {
+  opacity: 0.7;
+}
+
+.menu.active .menu-title { 
+  font-weight: bold; 
+}

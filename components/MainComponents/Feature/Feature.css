@@ -1,0 +1,35 @@
+/* src/components/AdjustableComponent.css */
+.feature-component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 160px;
+  background-color: #fdf3e0;
+  color: #1a2b3c;
+  min-height: 350px; 
+  width: 100%; 
+  box-sizing: border-box;
+}
+
+.content {
+  flex: 1;
+  text-align: left;
+  padding-right: 200px;
+}
+
+.content h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.content p {
+  font-size: 20px;
+}
+
+.image-container img {
+  max-width: 540px;
+  height: 300px;
+  padding-right: 160px;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}

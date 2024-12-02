@@ -1,0 +1,21 @@
+/* src/components/Feature/Feature.css */
+.pin {
+    width: 152px;
+    text-align: center;
+    color: #fdf3e0;
+  }
+  
+  .pin img {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+  }
+    
+  .pin p {
+    font-size: 20px;
+    color: #fdf3e0;
+  }
+  
+  .pin:hover { 
+    opacity: 0.6; 
+  } 

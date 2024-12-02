@@ -1,0 +1,74 @@
+/* Контейнер для таблицы */
+.table-container {
+    max-width: 800px;
+    margin: 0px 0px 50px 440px ;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    height: 400px; /* Максимальная высота таблицы */
+    position: relative;
+    background-color: #fdf3e0; /* Желтый фон таблицы */
+    overflow-y: auto; /* Прокрутка по вертикали */
+    color: #1a2b3c;
+    font-size: 14pt;
+  }
+
+  .table-container-coach {
+    max-width: 800px;
+    border-radius: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    height: 400px; /* Максимальная высота таблицы */
+    position: relative;
+    background-color: #fdf3e0; /* Желтый фон таблицы */
+    overflow-y: auto; /* Прокрутка по вертикали */
+    color: #1a2b3c;
+    font-size: 14pt;
+    margin-top: 70px  ;
+  }
+  
+  /* Таблица */
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    table-layout: fixed; /* Разделение столбцов равномерно */
+  }
+  
+  /* Шапка таблицы */
+  .styled-table thead {
+    position: sticky; /* Фиксация шапки */
+    top: 0;
+  }
+  
+  /* Обводка с закруглением */
+  .styled-table thead th {
+    padding: 12px 15px;
+    text-align: left;
+    border-right: 1px solid #1a2b3c; /* Разделение столбцов */
+    background-color: #fdf3e0;
+  }
+  
+  /* Тело таблицы */
+  .styled-table tbody tr {
+    background-color: #fdf3e0;
+    cursor: pointer; /* Курсор-указатель при наведении */
+  }
+  
+  .styled-table tbody tr:hover {
+    background-color: #d9d7d4; /* Серый фон при наведении */
+  }
+  
+  /* Выбранная строка */
+  .styled-table tbody tr.selected {
+    background-color: #d9d7d4; /* Серый фон для выбранной строки */
+  }
+  
+  /* Ячейки тела таблицы */
+  .styled-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-right: 1px solid #1a2b3c; /* Разделение столбцов */
+    word-wrap: break-word;
+  }
+  

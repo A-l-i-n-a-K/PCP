@@ -1,0 +1,26 @@
+.add-component {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Расстояние между иконкой и текстом */
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .add-component-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .add-component-title {
+    font-size: 16pt;
+    color: #fdf3e0; /* Основной цвет текста */
+    flex: 1; /* Для выравнивания текста */
+    margin: 0px;
+    background: linear-gradient(to right, #78f17c, #09ec20); /* Градиентный фон */
+    -webkit-background-clip: text; /* Применяем фон только к тексту */
+    -webkit-text-fill-color: transparent; /* Делаем текст прозрачным, чтобы был виден градиент */
+  }
+    
+  .add-component:hover {
+    opacity: 0.6;
+  }

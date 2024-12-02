@@ -1,0 +1,13 @@
+  .crud-content {
+    background: #fdf3e0;
+    border-radius: 30px;
+    padding: 40px;
+    width: 170px;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+    

@@ -1,0 +1,55 @@
+/* src/components/Header/Header.css */
+.header {
+  background-color: #1a2b3c;
+  padding-left: 100px; 
+  padding-right: 100px; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 40px;
+  font-size: 50px;
+  color: #fdf3e0;
+}
+
+.login-button {
+  margin: 40px;
+  background: linear-gradient(to right, #FFA006, #ff6941); 
+  color: #fdf3e0;
+  border: none;
+  outline: none; 
+  width: 160px; 
+  height: 42px; 
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 15px;
+}
+
+.login-button:hover { 
+  opacity: 0.8; 
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  margin: -20px 0 50px;
+  font-family: 'Montserrat', sans-serif;
+} 
+
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(251, 249, 249, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

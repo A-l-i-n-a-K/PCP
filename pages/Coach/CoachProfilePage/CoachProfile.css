@@ -1,0 +1,91 @@
+/* Общий контейнер */
+.coachProfile-page {
+    display: flex;
+    height: 900px;
+    width: 1700px;
+    background-color: #fdf3e0;
+    position: fixed;
+  }
+  
+  /* Основное содержимое */
+  .coachProfile-mainContent {
+    margin-left: 500px; /* Учитываем ширину боковой панели */
+    flex: 1;
+    padding-top: 65px;
+  }
+  
+  .coachProfile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .coachProfile-avatar {
+    position: relative;
+    margin-right: 100px;
+  }
+  
+  .coachProfile-avatarImage {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #d9d9d9;
+  }
+  
+ .coachProfile-avatarAdd {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to right, #FFA006, #ff6941); /* Градиентный фон */
+  color: #fdf3e0; /* Цвет текста */
+  font-size: 30px; /* Размер текста */
+  width: 45px; /* Размер кнопки */
+  height: 45px;
+  border: 3px solid #fdf3e0; /* Белая обводка */
+  border-radius: 50%; /* Круглая форма */
+  cursor: pointer; /* Указатель при наведении */
+  display: flex; /* Центрирование текста */
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Анимация */
+}
+  
+  /* Эффект при наведении */
+  .coachProfile-avatarAdd:hover {
+    opacity: 0.8;
+  }
+  
+  /* Эффект при клике */
+  .coachProfile-avatarAdd:active {
+    transform: scale(0.9); /* Слегка уменьшить */
+  }
+
+  .coachProfile-avatarImage {
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    object-fit: cover; /* Подгоняем изображение под контейнер */
+    background-color: #d9d9d9;
+  }
+    
+  .coachProfile-headerTitle {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    font-size: 24pt;
+    color: #1a2b3c;
+  }
+
+  .coachProfile-headerTitle-sportInfo {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+  }
+
+  .profileInfoCoach-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  } 
