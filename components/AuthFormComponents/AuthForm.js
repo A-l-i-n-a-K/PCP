@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./AuthForm.css";
 import cross from '../../svg/cross.svg';
 
@@ -26,16 +27,26 @@ const AuthForm = () => {
     signInInvalidCredentials: "",
   });
   const [showModal, setShowModal] = useState(false);
+  const [users, setUsers] = useState([]);
 
-  const existingUsers = [
-    { name: "Alina", email: "kubitskaya.alina@gmail.com", password: "123456", role: "athlete" },
-  ];
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
-  const existingUsers1 = [
-    { name: "Alina", email: "kubitskaya.alina@gmail.com", password: "123456", role: "coach" },
-  ];
+  const loadUsers = async () => {
+    try {
+      const result = await axios.get("http://localhost:8080/users");
+      setUsers(result.data);
+    } catch (error) {
+      console.error("Ошибка загрузки данных пользователей:", error);
+    }
+  };
 
-  // Добавляем box-sizing для всех элементов формы через useEffect
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    await axios.post("http://localhost:8080/user", formData);
+  };
+
   useEffect(() => {
     const style = document.createElement('style');
     style.innerHTML = `
@@ -66,7 +77,7 @@ const AuthForm = () => {
 
     setErrors((prev) => ({
       ...prev,
-      [name]: "", // Сброс ошибки при изменении поля
+      [name]: "",
     }));
 
     if (name === 'email') {
@@ -101,8 +112,8 @@ const AuthForm = () => {
 
     setErrors((prev) => ({
       ...prev,
-      [name]: "", // Сброс ошибки при изменении поля
-      signInInvalidCredentials: "", // Сбрасываем ошибку неверных данных
+      [name]: "",
+      signInInvalidCredentials: "",
     }));
 
     if (name === 'email' && value) {
@@ -130,9 +141,10 @@ const AuthForm = () => {
     }
   };
 
-  const handleSignUpSubmit = (e) => {
+  const handleSignUpSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password, role } = formData;
+    const roleMapped = role === "athlete" ? "SPORTSMAN" : "COACH";
     const newErrors = {};
 
     if (!name) newErrors.name = "Имя не может быть пустым";
@@ -140,44 +152,55 @@ const AuthForm = () => {
     if (!password) newErrors.password = "Пароль не может быть пустым";
     if (!role) newErrors.role = "Роль не выбрана";
 
-    if (existingUsers.some(user => user.email === email)) {
-      newErrors.email = "Этот email уже существует";
+    const result = await axios.get("http://localhost:8080/users");
+    const usersList = result.data;
+
+    if (usersList.some(user => user.email === email)) {
+        newErrors.email = "Этот email уже существует";
     }
-    if (existingUsers.some(user => user.name === name)) {
-      newErrors.name = "Это имя уже существует";
+    if (usersList.some(user => user.name === name)) {
+        newErrors.name = "Это имя уже существует";
     }
 
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setShowModal(true);
+        setErrors(newErrors);
+        setShowModal(true);
     } else {
-      handleSignInClick();
+        await axios.post("http://localhost:8080/user", {
+          name,
+          email,
+          password,
+          role: roleMapped,
+        });
+        // Обработка успешной регистрации
     }
-  };
+};
+
+  
 
   const handleSignInSubmit = (e) => {
     e.preventDefault();
     const { email, password, role } = signInData;
+    const roleMapped = role === "athlete" ? "SPORTSMAN" : "COACH";
     const newErrors = {};
-
+  
     if (!email) newErrors.signInEmail = "Email не может быть пустым";
     if (!password) newErrors.signInPassword = "Пароль не может быть пустым";
     if (!role) newErrors.signInRole = "Роль не выбрана";
-
-    const allUsers = [...existingUsers, ...existingUsers1];
-
-    if (email && password && role) { 
-      const user = allUsers.find( 
-        (user) => user.email === email && user.password === password && user.role === role ); 
-      if (!user) { 
-        newErrors.signInInvalidCredentials = "Неверный email, пароль или роль"; 
-      } 
-      else {
-      if (role === "athlete") { 
-        window.location.href = "/sportsmanProfile"; 
-        } 
-        else if (role === "coach") { window.location.href = "/coachProfile"; } } }
-
+  
+    if (email && password && role) {
+      const user = users.find(
+        (user) => user.email === email && user.password === password && user.role === roleMapped
+      );
+      if (!user) {
+        newErrors.signInInvalidCredentials = "Неверный email, пароль или роль";
+        setShowModal(true);
+      } else {
+        setShowModal(false); // Закрываем окно
+        window.location.href = role === "athlete" ? "/sportsmanProfile" : "/coachProfile";
+      }
+    }
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setShowModal(true);
@@ -185,6 +208,7 @@ const AuthForm = () => {
       console.log("Успешный вход!");
     }
   };
+  
 
   const closeModal = () => {
     setShowModal(false);
@@ -195,11 +219,12 @@ const AuthForm = () => {
       <div className="auth-form-form-container auth-form-sign-up-container">
         <form className="auth-form-form" onSubmit={handleSignUpSubmit}>
           <h2 className="auth-form-h2-blue">Регистрация</h2>
+          <div onSubmit={(e) => onSubmit(e)}>
           <input 
             className="auth-form-input"
             type="text"
             name="name"
-            placeholder="Имя"
+            placeholder="Логин"
             value={formData.name}
             onChange={handleInputChange}
           />
@@ -234,6 +259,7 @@ const AuthForm = () => {
           </select>
           {errors.role && <p className="auth-form-error">{errors.role}</p>}
           <button className="auth-form-button" type="submit">Зарегистрироваться</button>
+          </div>
         </form>
       </div>
 
