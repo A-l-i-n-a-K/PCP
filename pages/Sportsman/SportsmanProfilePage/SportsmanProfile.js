@@ -67,7 +67,7 @@ const SportsmanProfile = () => {
       const foundUser = users.find(user => user.id === parseInt(id));
       if (foundUser) {
         // Проверяем, существует ли профиль в SportsmanProfile
-        axios.get(`http://localhost:8080/sportsmanProfile/${id}`)
+        axios.get(`http://localhost:8080/Profile/${id}`)
           .then((response) => {
             // Если профиль существует, обновляем данные
             setUserData(response.data);
@@ -92,7 +92,7 @@ const SportsmanProfile = () => {
 
   // Функция для отправки данных на сервер для сохранения нового профиля
   const saveProfileData = (data) => {
-    axios.post('http://localhost:8080/sportsmanProfile/sportsmanProfileData', data)
+    axios.post('http://localhost:8080/Profile/ProfileData', data)
       .then((response) => {
         console.log('Данные успешно сохранены:', response.data);
         setUserData(data); // Сохраняем данные в стейте после успешного сохранения
@@ -110,7 +110,7 @@ const SportsmanProfile = () => {
       ...updatedData, // Обновляем только нужные данные, в данном случае только фото
     };
 
-    axios.put(`http://localhost:8080/sportsmanProfile/sportsmanProfileData/${id}`, updatedProfile)
+    axios.put(`http://localhost:8080/Profile/ProfileData/${id}`, updatedProfile)
       .then((response) => {
         console.log('Профиль обновлен:', response.data);
         setUserData(response.data); // Обновляем данные пользователя после успешного обновления
@@ -119,6 +119,7 @@ const SportsmanProfile = () => {
         console.error('Ошибка при обновлении профиля:', error);
       });
   };
+
 
   // Рендерим загрузку данных, если они еще не подгрузились
   if (loading) {

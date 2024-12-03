@@ -42,7 +42,7 @@ const EditModal = ({ userData, onClose, onSave }) => {
     };
 
     axios
-      .put(`http://localhost:8080/sportsmanProfile/sportsmanProfileData/${userData.id}`, updatedFormData)
+      .put(`http://localhost:8080/Profile/ProfileData/${userData.id}`, updatedFormData)
       .then((response) => {
         onSave(response.data); // Обновляем состояние в родительском компоненте
         onClose(); // Закрываем модальное окно

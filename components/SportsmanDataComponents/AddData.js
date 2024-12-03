@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import './AddData.css';
 import AddComponent from '../AddComponent/AddComponent';
 
-const AddData = ({ onSave }) => {
+const AddData = () => {
+  const { id } = useParams();
   const [formData, setFormData] = useState({
     height: '',
     weight: '',
@@ -23,53 +25,68 @@ const AddData = ({ onSave }) => {
 
   // Обработчик отправки данных
   const handleSubmit = () => {
-    // Составляем новый список данных для добавления в таблицу
     const newData = [];
-
-    // Проверяем каждое поле и добавляем данные в newData
+  
+    // Получаем sportsmanId из ссылки или контекста (если нужно).
+    const sportsmanId = id;  // Пример, замените на реальный ID
+  
+    // Создаем объекты для каждого поля формы
     if (formData.height) {
-      newData.push({ показатель: "Рост", значение: formData.height, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Рост", meaning: formData.height, date: formData.date });
     }
     if (formData.weight) {
-      newData.push({ показатель: "Вес", значение: formData.weight, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Вес", meaning: formData.weight, date: formData.date });
     }
     if (formData.distance) {
-      newData.push({ показатель: "Дистанция", значение: formData.distance, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Дистанция", meaning: formData.distance, date: formData.date });
     }
     if (formData.time) {
-      newData.push({ показатель: "Время", значение: formData.time, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Время", meaning: formData.time, date: formData.date });
     }
     if (formData.throwingDistance) {
-      newData.push({ показатель: "Дистанция метания", значение: formData.throwingDistance, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Дистанция метания", meaning: formData.throwingDistance, date: formData.date });
     }
     if (formData.cargoWeight) {
-      newData.push({ показатель: "Вес груза", значение: formData.cargoWeight, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Вес груза", meaning: formData.cargoWeight, date: formData.date });
     }
     if (formData.lenghtJump) {
-      newData.push({ показатель: "Длина прыжка", значение: formData.lenghtJump, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Длина прыжка", meaning: formData.lenghtJump, date: formData.date });
     }
     if (formData.heightJump) {
-      newData.push({ показатель: "Высота прыжка", значение: formData.heightJump, дата: formData.date });
+      newData.push({ sportsmanId, indicator: "Высота прыжка", meaning: formData.heightJump, date: formData.date });
     }
-
-    // Если есть какие-либо данные, передаем их в родительский компонент
+  
+    // Если есть данные, отправляем их на сервер
     if (newData.length > 0) {
-      onSave(newData);  // Передаем все данные сразу
+      fetch("http://localhost:8080/sportsmanData/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Данные успешно сохранены:', data);
+        // Очистить форму
+        setFormData({
+          height: '',
+          weight: '',
+          distance: '',
+          time: '',
+          throwingDistance: '',
+          cargoWeight: '',
+          lenghtJump: '',
+          heightJump: '',
+          date: ''
+        });
+      })
+      .catch((error) => {
+        console.error('Ошибка при сохранении данных:', error);
+      });
     }
-
-    // Очищаем форму после добавления
-    setFormData({
-      height: '',
-      weight: '',
-      distance: '',
-      time: '',
-      throwingDistance: '',
-      cargoWeight: '',
-      lenghtJump: '',
-      heightJump: '',
-      date: ''
-    });
   };
+  
 
   return (
     <div className="addData">

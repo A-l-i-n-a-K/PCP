@@ -1,14 +1,15 @@
 import React from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import Menu from './Menu';
 import clipboard from '../../svg/clipboard.svg';
 import edit from '../../svg/edit.svg';
 import exit from '../../svg/exit.svg';
 import vector from '../../svg/vector.svg';
-import { useNavigate } from 'react-router-dom';
 import { useGlobalState } from '../../GlobalStateContext';
 
 const SportsmanSidebar = () => {
+  const { id } = useParams(); // Получаем ID из URL
   const navigate = useNavigate();
   const { activeMenu, setActiveMenu, profilePhoto } = useGlobalState();
 
@@ -17,19 +18,19 @@ const SportsmanSidebar = () => {
   };
  
   const handleTest = () => {
-    navigate('/psychologyTest');
+    navigate(`/psychologyTest/${id}`);
   };
 
   const handleAnalysis = () => {
-    navigate('/analysis');
+    navigate(`/analysis/${id}`);
   };
 
   const handleData = () => {
-    navigate('/sportsmanData');
+    navigate(`/sportsmanData/${id}`);
   };
 
   const handleProfileClick = () => {
-    navigate('/sportsmanProfile');
+    navigate(`/sportsmanProfile/${id}`);
   };
 
   const handleExit = () => {
