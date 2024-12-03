@@ -18,6 +18,21 @@ const SportInfo = ({ userData, onSave }) => {
       setIsEditing(false);
     };
 
+    const translateSport = (sport) => {
+      switch (sport) {
+        case 'ATHLETICS':
+          return 'Лёгкая атлетика';
+        case 'SWIMMING':
+          return 'Плавание';
+        case 'BASCETBALL':
+          return 'Баскетбол';
+        case 'VOLLEYBALL':
+          return 'Волейбол';
+        default:
+          return sport;
+      }
+    };
+
   return (
     <div className="profileInfo-edit">
     <IconAndText title="Редактировать данные" isEdit={true} icon={edit} onClick={handleEdit} />
@@ -26,7 +41,7 @@ const SportInfo = ({ userData, onSave }) => {
       <h1 className="profileInfo-title">Спортивные данные</h1>
       <div className="profileInfo-group">
         <IconAndText title="Спортсмен" icon={userSearch} />
-        <IconAndText title={userData.sport} icon={sport} />
+        <IconAndText title={translateSport(userData.sport)} icon={sport} />
         <IconAndText title={userData.coachId} icon={fingerprint} />
       </div>
     </div>

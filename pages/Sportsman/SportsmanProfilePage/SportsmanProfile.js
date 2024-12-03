@@ -38,7 +38,10 @@ const SportsmanProfile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        setProfilePhoto(e.target.result); // Устанавливаем загруженное фото
+        const newProfilePhoto = e.target.result;  // Загружаем изображение как Base64 строку
+        setProfilePhoto(newProfilePhoto); // Обновляем глобальное состояние с новым фото
+        // Обновляем профиль на сервере
+        updateProfileData({ profilePhoto: newProfilePhoto });
       };
       reader.readAsDataURL(file); // Читаем файл как Data URL
     }
@@ -97,6 +100,23 @@ const SportsmanProfile = () => {
       })
       .catch((error) => {
         console.error('Ошибка при сохранении данных:', error);
+      });
+  };
+
+  // Функция для обновления данных профиля
+  const updateProfileData = (updatedData) => {
+    const updatedProfile = {
+      ...userData,
+      ...updatedData, // Обновляем только нужные данные, в данном случае только фото
+    };
+
+    axios.put(`http://localhost:8080/sportsmanProfile/sportsmanProfileData/${id}`, updatedProfile)
+      .then((response) => {
+        console.log('Профиль обновлен:', response.data);
+        setUserData(response.data); // Обновляем данные пользователя после успешного обновления
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении профиля:', error);
       });
   };
 

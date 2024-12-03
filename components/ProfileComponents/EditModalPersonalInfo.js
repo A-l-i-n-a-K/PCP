@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './EditModal.css';
 import yes from '../../svg/yes.svg';
 
@@ -11,9 +12,32 @@ const EditModal = ({ userData, onClose, onSave }) => {
   };
 
   const handleSubmit = () => {
-    onSave(formData);
-    onClose();
+    const updatedFormData = {
+      ...formData,
+      gender: formData.gender === 'Мужской' ? 'MALE' : 'FEMALE',
+    };
+  
+    axios
+      .put(`http://localhost:8080/sportsmanProfile/sportsmanProfileData/${userData.id}`, updatedFormData)
+      .then((response) => {
+        onSave(response.data); // Передаём обновлённые данные в родительский компонент
+        onClose(); // Закрываем модальное окно
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении данных:', error);
+      });
+
+      axios
+      .put(`http://localhost:8080/user/${userData.id}`, updatedFormData)
+      .then((response) => {
+        onSave(response.data); // Передаём обновлённые данные в родительский компонент
+        onClose(); // Закрываем модальное окно
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении данных:', error);
+      });
   };
+  
 
   return (
     <div className="editModal">
@@ -23,8 +47,8 @@ const EditModal = ({ userData, onClose, onSave }) => {
           Логин:
           <input
             type="text"
-            name="login"
-            value={formData.login}
+            name="name"
+            value={formData.name}
             onChange={handleChange}
           />
         </label>
@@ -32,8 +56,8 @@ const EditModal = ({ userData, onClose, onSave }) => {
           ФИО:
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="fio"
+            value={formData.fio}
             onChange={handleChange}
           />
         </label>

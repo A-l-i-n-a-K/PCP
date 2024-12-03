@@ -20,16 +20,28 @@ const PersonalInfo = ({ userData, onSave }) => {
     setIsEditing(false);
   };
 
+  const translateGender = (gender) => {
+    switch (gender) {
+      case 'MALE':
+        return 'Мужской';
+      case 'FEMALE':
+        return 'Женский';
+      default:
+        return gender;
+    }
+  };
+
+
   return (
     <div className="profileInfo-edit">
       <div className="profileInfo">
         <h1 className="profileInfo-title">Личные данные</h1>
         <div className="profileInfo-group">
-          <IconAndText title={userData.name} icon={profile} />
+          <IconAndText title={userData.fio} icon={profile} />
           <IconAndText title={userData.age} icon={age} />
           <IconAndText title={userData.email} icon={email} />
           <IconAndText title={userData.phone} icon={number} />
-          <IconAndText title={userData.gender} icon={gender} />
+          <IconAndText title={translateGender(userData.gender)} icon={gender} />
         </div>
       </div>
       <IconAndText title="Редактировать данные" isEdit={true} icon={edit} onClick={handleEdit} />
