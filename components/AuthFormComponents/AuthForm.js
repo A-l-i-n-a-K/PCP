@@ -152,6 +152,7 @@ const AuthForm = () => {
     if (!password) newErrors.password = "Пароль не может быть пустым";
     if (!role) newErrors.role = "Роль не выбрана";
 
+    // Получаем список пользователей
     const result = await axios.get("http://localhost:8080/users");
     const usersList = result.data;
 
@@ -166,15 +167,20 @@ const AuthForm = () => {
         setErrors(newErrors);
         setShowModal(true);
     } else {
+        // Отправка данных на сервер
         await axios.post("http://localhost:8080/user", {
           name,
           email,
           password,
           role: roleMapped,
         });
-        // Обработка успешной регистрации
+
+        // Переключение на панель входа после успешной регистрации
+        setIsRightPanelActive(false);
+        setShowModal(false); // Закрыть модальное окно с ошибками
     }
 };
+
 
   
 
@@ -197,7 +203,7 @@ const AuthForm = () => {
         setShowModal(true);
       } else {
         setShowModal(false); // Закрываем окно
-        window.location.href = role === "athlete" ? "/sportsmanProfile" : "/coachProfile";
+        window.location.href = role === "athlete" ? `/sportsmanProfile/${user.id}` : `/coachProfile/${user.id}`;
       }
     }
   
