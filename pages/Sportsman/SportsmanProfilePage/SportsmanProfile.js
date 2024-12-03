@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import './SportsmanProfile.css'; // Стили
 import SportsmanSidebar from '../../../components/MenuComponent/SportsmanSidebar'; // Боковая панель
 import PersonalInfo from '../../../components/ProfileComponents/PersonalInfo';
@@ -44,7 +44,7 @@ const SportsmanProfile = () => {
     }
   };
 
-  // Запрос на сервер для получения списка всех пользователей
+  // Загрузка списка пользователей
   useEffect(() => {
     axios.get(`http://localhost:8080/users`) // Запрос на сервер для получения списка всех пользователей
       .then((response) => {
@@ -53,27 +53,52 @@ const SportsmanProfile = () => {
       .catch((error) => {
         console.error("Ошибка загрузки списка пользователей:", error);
       });
-  }, []);
+  }, []); // Загрузка списка пользователей
 
-  // Подгрузка данных пользователя по ID из списка пользователей
+  // Подгрузка данных пользователя по ID
   useEffect(() => {
-    if (id) {
-      console.log(`Проверка профиля пользователя с ID: ${id}`);
+    if (id && users.length > 0) {
+      console.log(`Проверяем профиль пользователя с ID: ${id}`);
 
-      // Отправляем GET запрос на сервер для получения профиля по ID
-      axios.get(`http://localhost:8080/sportsmanProfile/${id}`)
-        .then(response => {
-          // Если профиль найден или создан, обновляем данные
-          setUserData(response.data);
-          setLoading(false);
-        })
-        .catch(error => {
-          // Ошибка при загрузке профиля, например, если профиль не найден
-          console.error("Ошибка при загрузке профиля:", error);
-          setLoading(false);
-        });
+      // Находим пользователя по ID из списка
+      const foundUser = users.find(user => user.id === parseInt(id));
+      if (foundUser) {
+        // Проверяем, существует ли профиль в SportsmanProfile
+        axios.get(`http://localhost:8080/sportsmanProfile/${id}`)
+          .then((response) => {
+            // Если профиль существует, обновляем данные
+            setUserData(response.data);
+            setLoading(false); // Данные загружены
+          })
+          .catch((error) => {
+            if (error.response && error.response.status === 404) {
+              // Если профиль не найден, создаем новый профиль
+              console.log("Профиль не найден, создаём новый профиль...");
+              saveProfileData(defaultUserData); // Создаём новый профиль с дефолтными данными
+            } else {
+              console.error("Ошибка при загрузке профиля:", error);
+              setLoading(false); // Останавливаем загрузку в случае ошибки
+            }
+          });
+      } else {
+        console.error("Пользователь не найден в списке.");
+        setLoading(false);
+      }
     }
-  }, [id]); // Перезапускаем эффект, если ID изменится
+  }, [id, users]); // Перезапускаем эффект, если id или users изменились
+
+  // Функция для отправки данных на сервер для сохранения нового профиля
+  const saveProfileData = (data) => {
+    axios.post('http://localhost:8080/sportsmanProfile/sportsmanProfileData', data)
+      .then((response) => {
+        console.log('Данные успешно сохранены:', response.data);
+        setUserData(data); // Сохраняем данные в стейте после успешного сохранения
+        setLoading(false); // Останавливаем индикатор загрузки
+      })
+      .catch((error) => {
+        console.error('Ошибка при сохранении данных:', error);
+      });
+  };
 
   // Рендерим загрузку данных, если они еще не подгрузились
   if (loading) {
