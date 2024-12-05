@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -12,6 +12,7 @@ import {
   Legend,
 } from "chart.js";
 import "react-datepicker/dist/react-datepicker.css";
+import { useParams } from "react-router-dom"; // Для получения параметра из URL
 import "./Analysis.css";
 import SportsmanSidebar from '../../../components/MenuComponent/SportsmanSidebar';
 
@@ -28,28 +29,34 @@ ChartJS.register(
 );
 
 const Analysis = () => {
+  const { id } = useParams(); // Получаем id спортсмена из URL
   const [dataType, setDataType] = useState("Вес");
   const [graphType, setGraphType] = useState("line");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [data, setData] = useState([]); // Массив данных для графиков
 
-  const data = [
-    { показатель: "Вес", значение: 47, дата: "2024-10-01" },
-    { показатель: "Вес", значение: 50, дата: "2024-10-17" },
-    { показатель: "Вес", значение: 52, дата: "2024-10-22" },
-    { показатель: "Вес", значение: 52, дата: "2024-10-22" },
-    { показатель: "Вес", значение: 52, дата: "2024-10-22" },
-    { показатель: "Рост", значение: 170, дата: "2024-10-01" },
-    { показатель: "Рост", значение: 172, дата: "2024-10-17" },
-    { показатель: "Рост", значение: 173, дата: "2024-10-22" },
-    { показатель: "Рост", значение: 171, дата: "2024-11-01" },
-  ];
+  // Функция для получения данных из API
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/sportsmanData/datas?sportsmanId=${id}`);
+      const result = await response.json();
+      setData(result); // Заполняем данные для графиков
+    } catch (error) {
+      console.error("Ошибка при получении данных:", error);
+    }
+  };
 
-  // Фильтрация данных по параметрам
+  // Загружаем данные при изменении ID спортсмена
+  useEffect(() => {
+    fetchData();
+  }, [id]);
+
+  // Фильтрация данных по выбранному параметру и дате
   const filteredData = data
-    .filter((item) => item.показатель === dataType)
+    .filter((item) => item.indicator === dataType)
     .filter((item) => {
-      const itemDate = new Date(item.дата);
+      const itemDate = new Date(item.date);
       return (
         (!startDate || itemDate >= startDate) &&
         (!endDate || itemDate <= endDate)
@@ -70,11 +77,11 @@ const Analysis = () => {
 
   // Подготовка данных для графика
   const chartData = {
-    labels: filteredData.map((item) => item.дата),
+    labels: filteredData.map((item) => item.date),
     datasets: [
       {
         label: dataType,
-        data: filteredData.map((item) => item.значение),
+        data: filteredData.map((item) => item.meaning),
         borderColor: "orange",
         backgroundColor: colors, // Используем цвета для столбчатого графика
         fill: true,
@@ -84,30 +91,30 @@ const Analysis = () => {
   };
 
   const pieData = {
-    labels: filteredData.map((item) => item.дата),
+    labels: filteredData.map((item) => item.date),
     datasets: [
       {
         label: dataType,
-        data: filteredData.map((item) => item.значение),
+        data: filteredData.map((item) => item.meaning),
         backgroundColor: colors,
         borderWidth: 1,
       },
     ],
   };
 
+  // Расчет средних значений
   const averageValue =
-    filteredData.reduce((sum, item) => sum + item.значение, 0) /
-    filteredData.length || 0;
+    filteredData.reduce((sum, item) => sum + item.meaning, 0) / filteredData.length || 0;
+
   const averageChange =
     filteredData.length > 1
       ? filteredData
           .slice(1)
           .reduce(
             (sum, item, index) =>
-              sum + Math.abs(item.значение - filteredData[index].значение),
+              sum + Math.abs(item.meaning - filteredData[index].meaning),
             0
-          ) /
-        (filteredData.length - 1)
+          ) / (filteredData.length - 1)
       : 0;
 
   return (

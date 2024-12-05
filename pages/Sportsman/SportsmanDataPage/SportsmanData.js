@@ -1,43 +1,51 @@
-import React, { useState, useRef } from 'react';
-import './SportsmanData.css';
-import SportsmanSidebar from '../../../components/MenuComponent/SportsmanSidebar';
-import AddData from '../../../components/SportsmanDataComponents/AddData';
-import TableComponent from '../../../components/SportsmanDataComponents/TableComponent';
-import CRUD from '../../../components/SportsmanDataComponents/CRUD';
-import EditModalData from '../../../components/SportsmanDataComponents/EditModalData';
-import ErrorEditModalData from '../../../components/SportsmanDataComponents/ErrorEditModalData';
+import React, { useState, useRef } from "react";
+import "./SportsmanData.css";
+import SportsmanSidebar from "../../../components/MenuComponent/SportsmanSidebar";
+import AddData from "../../../components/SportsmanDataComponents/AddData";
+import TableComponent from "../../../components/SportsmanDataComponents/TableComponent";
+import CRUD from "../../../components/SportsmanDataComponents/CRUD";
+import EditModalData from "../../../components/SportsmanDataComponents/EditModalData";
 
 const SportsmanData = () => {
   const [tableData, setTableData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const addDataRef = useRef(null);
 
-  const handleSaveData = (newData) => {
-    setTableData([...tableData, ...newData]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/sportsmanData/datas");
+      const data = await response.json();
+      setTableData(data);
+    } catch (error) {
+      console.error("Ошибка загрузки данных:", error);
+    }
   };
 
-  const handleUpdateData = (updatedRow) => {
-    const updatedData = tableData.map((row, index) => (index === selectedRow.index ? updatedRow : row));
-    setTableData(updatedData);
-    setIsEditing(false);
-    setSelectedRow(null);
-  };
+  const handleDeleteData = async (selectedRow) => {
+    try {
+      const { sportsmanId, dataId } = selectedRow;
+      const response = await fetch(
+        `http://localhost:8080/sportsmanData/data/${sportsmanId}/${dataId}`,
+        { method: "DELETE" }
+      );
+      if (!response.ok) {
+        throw new Error("Ошибка при удалении данных");
+      }
 
-  const handleDeleteData = () => {
-    if (selectedRow) {
-      const updatedData = tableData.filter((_, index) => index !== selectedRow.index);
-      setTableData(updatedData);
+      setTableData((prevData) =>
+        prevData.filter((_, index) => index !== selectedRow.index)
+      );
       setSelectedRow(null);
-    } else {
-      setErrorMessage("Выберите строку для удаления");
+    } catch (error) {
+      console.error(error.message);
+      throw error;
     }
   };
 
   const scrollToAddData = () => {
     if (addDataRef.current) {
-      addDataRef.current.scrollIntoView({ behavior: 'smooth' });
+      addDataRef.current.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -45,29 +53,29 @@ const SportsmanData = () => {
     <div className="sportsmanData-page">
       <SportsmanSidebar />
       <div ref={addDataRef}>
-        <AddData onSave={handleSaveData} />
+        <AddData />
       </div>
-      <div className='sportsmanData-row'>
+      <div className="sportsmanData-row">
         <TableComponent data={tableData} setSelectedRow={setSelectedRow} />
         <CRUD
           scrollToAddData={scrollToAddData}
           selectedRow={selectedRow}
           setIsEditing={setIsEditing}
-          setErrorMessage={setErrorMessage}
           handleDeleteData={handleDeleteData}
         />
       </div>
       {isEditing && (
         <EditModalData
           row={selectedRow}
-          onSave={handleUpdateData}
+          onSave={(updatedRow) => {
+            const updatedData = tableData.map((row, index) =>
+              index === selectedRow.index ? updatedRow : row
+            );
+            setTableData(updatedData);
+            setIsEditing(false);
+            setSelectedRow(null);
+          }}
           onClose={() => setIsEditing(false)}
-        />
-      )}
-      {errorMessage && (
-        <ErrorEditModalData
-          message={errorMessage}
-          onClose={() => setErrorMessage("")}
         />
       )}
     </div>
@@ -75,4 +83,3 @@ const SportsmanData = () => {
 };
 
 export default SportsmanData;
-  

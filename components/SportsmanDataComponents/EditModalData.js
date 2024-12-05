@@ -1,20 +1,38 @@
 import React, { useState } from 'react';
+
+import { useParams } from 'react-router-dom';
 import './EditModalData.css';
 import yes from '../../svg/yes.svg';
 
 const EditModalData = ({ row, onSave, onClose }) => {
-  const [value, setValue] = useState(row.значение);
-  const [date, setDate] = useState(row.дата);
+  const { id } = useParams();
+  const [value, setValue] = useState(row.meaning);
+  const [date, setDate] = useState(row.date);
 
   const handleSave = () => {
-    onSave({ ...row, значение: value, дата: date });
+    // Выполняем PUT-запрос
+    fetch(`http://localhost:8080/sportsmanData/data/${id}/${row.dataId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ...row, meaning: value, date }),
+    })
+      .then((response) => response.json())
+      .then((updatedRow) => {
+        console.log('Данные успешно обновлены:', updatedRow);
+        onSave(updatedRow); // Передаем обновленные данные в родительский компонент
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении данных:', error);
+      });
   };
 
   return (
     <div className="editModalData">
       <div className="editModalData-content">
         <label>
-          {row.показатель}:
+          {row.indicator}:
           <input
             type="text"
             value={value}

@@ -16,9 +16,13 @@ const CRUD = ({ scrollToAddData, selectedRow, setIsEditing, handleDeleteData }) 
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (selectedRow) {
-      handleDeleteData();
+      try {
+        await handleDeleteData(selectedRow);
+      } catch (error) {
+        setErrorMessage("Ошибка удаления: " + error.message);
+      }
     } else {
       setErrorMessage("Выберите строку для удаления");
     }
