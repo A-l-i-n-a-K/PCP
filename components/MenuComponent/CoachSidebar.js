@@ -3,10 +3,12 @@ import './Sidebar.css';
 import Menu from './Menu';
 import sportsman from '../../svg/sportsman.svg';
 import exit from '../../svg/exit.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 import { useGlobalState } from '../../GlobalStateContext';
 
 const CoachSidebar = () => {
+  const { id } = useParams();
+
   const navigate = useNavigate();
   const { activeMenu, setActiveMenu, profilePhoto } = useGlobalState();
 
@@ -15,11 +17,11 @@ const CoachSidebar = () => {
   };
 
   const handleProfileClick = () => {
-    navigate('/coachProfile');
+    navigate(`/coachProfile/${id}`);
   };
 
   const handleSportsmansClick = () => {
-    navigate('/sportsmans');
+    navigate(`/sportsmans/${id}`);
   };
 
   const handleExit = () => {

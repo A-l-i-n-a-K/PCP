@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./Survey.css";
 import yes from '../../../svg/yes.svg';
+import { useParams } from "react-router-dom";
 
 const Survey = () => {
+  const { id } = useParams();
+
   const questions = [
     "Я чувствую себя полным энергии перед каждой тренировкой.",
     "Я легко справляюсь со стрессом, вызванным соревнованиями или тренировками.",
@@ -28,30 +31,10 @@ const Survey = () => {
   const [showIncompleteModal, setShowIncompleteModal] = useState(false);
   const navigate = useNavigate();
 
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      if (Object.keys(answers).length === questions.length) {
-        setShowModal(true);
-      } else {
-        setShowIncompleteModal(true);
-      }
-    }
-  };
+  // Функция для подсчета общего балла
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
 
-  const handlePrev = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    } else {
-      navigate('/psychologyTest');
-    }
-  };
-
-  const handleAnswerChange = (value) => {
-    setAnswers({ ...answers, [currentQuestion]: value });
-  };
-
+  // Функция для генерации рекомендаций
   const getRecommendations = (score) => {
     if (score >= 60) {
       return "Прекрасное состояние. Вы показываете высокую мотивацию, эмоциональную устойчивость и уверенность в своих силах. Продолжайте в том же духе, поддерживайте свой уровень энергии и позитивное отношение к тренировкам.";
@@ -64,7 +47,49 @@ const Survey = () => {
     }
   };
 
-  const totalScore = Object.values(answers).reduce((a, b) => a + b, 0);
+  // Функция для обработки кнопки "Вперед"
+  const handleNext = async () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      if (Object.keys(answers).length === questions.length) {
+        // Отправляем ответы на сервер, если все вопросы отвечены
+        try {
+          const response = await fetch('http://localhost:8080/survey/result', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ answers })
+          });
+
+          const result = await response.json();
+
+          if (result) {
+            setShowModal(true);  // Показываем модальное окно с результатами
+          }
+        } catch (error) {
+          console.error("Ошибка при отправке данных:", error);
+        }
+      } else {
+        setShowIncompleteModal(true);  // Показываем сообщение, если не все вопросы отвечены
+      }
+    }
+  };
+
+  // Функция для обработки кнопки "Назад"
+  const handlePrev = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    } else {
+      navigate('/psychologyTest');
+    }
+  };
+
+  // Функция для обработки изменения ответа
+  const handleAnswerChange = (value) => {
+    setAnswers({ ...answers, [currentQuestion]: value });
+  };
 
   return (
     <div className="survey-container">
@@ -94,16 +119,20 @@ const Survey = () => {
           Вперед →
         </button>
       </div>
+
+      {/* Модальное окно с результатами */}
       {showModal && (
         <div className="resultModal">
           <div className="resultModal-content">
             <h2>Поздравляем вас с прохождением теста!</h2>
             <p>Ваш результат: {totalScore} / 75.</p>
             <p>{getRecommendations(totalScore)}</p>
-            <img className="resultModal-close" src={yes} alt="да" onClick={() => {setShowModal(false); navigate('/psychologyTest')}}/>
+            <img className="resultModal-close" src={yes} alt="да" onClick={() => {setShowModal(false); navigate(`/psychologyTest/${id}`)}}/>
           </div>
         </div>
       )}
+
+      {/* Модальное окно, если не все вопросы отвечены */}
       {showIncompleteModal && (
         <div className="resultModal">
           <div className="resultModal-content">

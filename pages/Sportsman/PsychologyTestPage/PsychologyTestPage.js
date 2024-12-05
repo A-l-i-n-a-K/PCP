@@ -7,12 +7,14 @@ import coffee from '../../../svg/coffee.svg';
 import flower from '../../../svg/flower.svg';
 import diamond from '../../../svg/diamond.svg';
 import clipboard from '../../../images/clipboard.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const PsychologyTestPage = () => {
+  const { id } = useParams();
+  
     const navigate = useNavigate();
     const handleClick = () => {
-        navigate('/survey');
+        navigate(`/survey/${id}`);
       };
 
   return (

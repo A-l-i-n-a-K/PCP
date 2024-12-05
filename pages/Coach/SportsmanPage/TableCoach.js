@@ -69,14 +69,14 @@ const TableCoach = ({ data, setSelectedRow }) => {
       <table className="styled-table">
         <thead>
           <tr>
-            <th onClick={() => handleSort("показатель")}>
-              Показатель {getSortArrow("показатель")}
+            <th onClick={() => handleSort("indicator")}>
+              Показатель {getSortArrow("indicator")}
             </th>
-            <th onClick={() => handleSort("значение")}>
-              Значение {getSortArrow("значение")}
+            <th onClick={() => handleSort("meaning")}>
+              Значение {getSortArrow("meaning")}
             </th>
-            <th onClick={() => handleSort("дата")}>
-              Дата {getSortArrow("дата")}
+            <th onClick={() => handleSort("date")}>
+              Дата {getSortArrow("date")}
             </th>
           </tr>
         </thead>
@@ -87,9 +87,9 @@ const TableCoach = ({ data, setSelectedRow }) => {
               className={selectedRowIndex === index ? "selected" : ""}
               onClick={() => handleRowClick(index)}
             >
-              <td>{row.показатель}</td>
-              <td>{row.значение}</td>
-              <td>{row.дата}</td>
+              <td>{row.indicator}</td>
+              <td>{row.meaning}</td>
+              <td>{row.date}</td>
             </tr>
           ))}
         </tbody>

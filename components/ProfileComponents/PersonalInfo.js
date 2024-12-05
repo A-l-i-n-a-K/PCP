@@ -31,7 +31,6 @@ const PersonalInfo = ({ userData, onSave }) => {
     }
   };
 
-
   return (
     <div className="profileInfo-edit">
       <div className="profileInfo">
