@@ -11,10 +11,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import "react-datepicker/dist/react-datepicker.css";
 import { useParams } from "react-router-dom"; // Для получения параметра из URL
+import SportsmanSidebar from "../../../components/MenuComponent/SportsmanSidebar";
 import "./Analysis.css";
-import SportsmanSidebar from '../../../components/MenuComponent/SportsmanSidebar';
 
 // Регистрация модулей Chart.js
 ChartJS.register(
@@ -35,11 +34,15 @@ const Analysis = () => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [data, setData] = useState([]); // Массив данных для графиков
+  const [averageValue, setAverageValue] = useState(null); // Среднее значение
+  const [averageChange, setAverageChange] = useState(null); // Среднее изменение
 
   // Функция для получения данных из API
   const fetchData = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/sportsmanData/datas?sportsmanId=${id}`);
+      const response = await fetch(
+        `http://localhost:8080/sportsmanData/datas?sportsmanId=${id}`
+      );
       const result = await response.json();
       setData(result); // Заполняем данные для графиков
     } catch (error) {
@@ -47,23 +50,54 @@ const Analysis = () => {
     }
   };
 
+  // Функция для получения статистики с сервера
+  const fetchStatistics = async () => {
+    try {
+      const params = new URLSearchParams({
+        sportsmanId: id,
+        indicator: dataType, // Параметр для выбора индикатора
+      });
+
+      // Если startDate и endDate заданы, добавляем их в параметры запроса
+      if (startDate) {
+        params.append('startDate', startDate.toISOString().split("T")[0]);
+      }
+      if (endDate) {
+        params.append('endDate', endDate.toISOString().split("T")[0]);
+      }
+
+      const response = await fetch(
+        `http://localhost:8080/sportsmanData/statistics?${params.toString()}`
+      );
+      const result = await response.json();
+
+      // Обновление состояния для отображения данных
+      if (result && result.averageValue !== undefined && result.averageChange !== undefined) {
+        setAverageValue(result.averageValue);
+        setAverageChange(result.averageChange);
+      } else {
+        setAverageValue(null);
+        setAverageChange(null);
+      }
+    } catch (error) {
+      console.error("Ошибка при получении статистики:", error);
+      setAverageValue(null);
+      setAverageChange(null);
+    }
+  };
+
   // Загружаем данные при изменении ID спортсмена
   useEffect(() => {
     fetchData();
-  }, [id]);
+    fetchStatistics();
+  }, [id, dataType, startDate, endDate]);
 
-  // Фильтрация данных по выбранному параметру и дате
+  // Фильтрация данных по выбранному параметру и сортировка по дате
   const filteredData = data
     .filter((item) => item.indicator === dataType)
-    .filter((item) => {
-      const itemDate = new Date(item.date);
-      return (
-        (!startDate || itemDate >= startDate) &&
-        (!endDate || itemDate <= endDate)
-      );
-    });
+    .sort((a, b) => new Date(a.date) - new Date(b.date)); // Сортировка по дате
 
-  // Цвета для различных колонок в столбчатом графике
+  // Цвета для графиков
   const colors = [
     "rgba(255, 99, 132, 0.6)",
     "rgba(54, 162, 235, 0.6)",
@@ -71,19 +105,17 @@ const Analysis = () => {
     "rgba(75, 192, 192, 0.6)",
     "rgba(153, 102, 255, 0.6)",
     "rgba(255, 159, 64, 0.6)",
-    "rgba(135, 206, 235, 0.6)",
-    "rgba(221, 160, 221, 0.6)",
   ];
 
-  // Подготовка данных для графика
+  // Подготовка данных для графиков
   const chartData = {
     labels: filteredData.map((item) => item.date),
     datasets: [
       {
         label: dataType,
-        data: filteredData.map((item) => item.meaning),
+        data: filteredData.map((item) => parseFloat(item.meaning)),
         borderColor: "orange",
-        backgroundColor: colors, // Используем цвета для столбчатого графика
+        backgroundColor: colors,
         fill: true,
         tension: 0.4,
       },
@@ -95,27 +127,12 @@ const Analysis = () => {
     datasets: [
       {
         label: dataType,
-        data: filteredData.map((item) => item.meaning),
+        data: filteredData.map((item) => parseFloat(item.meaning)),
         backgroundColor: colors,
         borderWidth: 1,
       },
     ],
   };
-
-  // Расчет средних значений
-  const averageValue =
-    filteredData.reduce((sum, item) => sum + item.meaning, 0) / filteredData.length || 0;
-
-  const averageChange =
-    filteredData.length > 1
-      ? filteredData
-          .slice(1)
-          .reduce(
-            (sum, item, index) =>
-              sum + Math.abs(item.meaning - filteredData[index].meaning),
-            0
-          ) / (filteredData.length - 1)
-      : 0;
 
   return (
     <div className="analysis-page">
@@ -125,7 +142,8 @@ const Analysis = () => {
           <div className="analysis-text-and-charts">
             <div className="analysis-controls">
               <div>
-                <label>Тип графика:
+                <label>
+                  Тип графика:
                   <select
                     value={graphType}
                     onChange={(e) => setGraphType(e.target.value)}
@@ -135,7 +153,8 @@ const Analysis = () => {
                     <option value="pie">Круговая диаграмма</option>
                   </select>
                 </label>
-                <label>Параметр:
+                <label>
+                  Параметр:
                   <select
                     value={dataType}
                     onChange={(e) => setDataType(e.target.value)}
@@ -152,7 +171,8 @@ const Analysis = () => {
                 </label>
               </div>
               <div className="analysis-row">
-                <label>Начальная дата:
+                <label>
+                  Начальная дата:
                   <input
                     type="date"
                     name="beginDate"
@@ -160,7 +180,8 @@ const Analysis = () => {
                     onChange={(e) => setStartDate(new Date(e.target.value))}
                   />
                 </label>
-                <label>Конечная дата:
+                <label>
+                  Конечная дата:
                   <input
                     type="date"
                     name="endDate"
@@ -170,14 +191,20 @@ const Analysis = () => {
                 </label>
               </div>
               <div className="statistics">
-                <p>Среднее значение: {averageValue.toFixed(1)}</p>
-                <p>Среднее изменение: {averageChange.toFixed(1)}</p>
+                <p>Среднее значение: {averageValue !== null ? averageValue.toFixed(1) : "0"}</p>
+                <p>Среднее изменение: {averageChange !== null ? averageChange.toFixed(1) : "0"}</p>
               </div>
             </div>
             <div className="chart">
-              {graphType === "line" && <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />}
-              {graphType === "bar" && <Bar data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />}
-              {graphType === "pie" && <Pie data={pieData} options={{ responsive: true, maintainAspectRatio: false }} />}
+              {graphType === "line" && (
+                <Line data={chartData} options={{ responsive: true }} />
+              )}
+              {graphType === "bar" && (
+                <Bar data={chartData} options={{ responsive: true }} />
+              )}
+              {graphType === "pie" && (
+                <Pie data={pieData} options={{ responsive: true }} />
+              )}
             </div>
           </div>
         </div>
