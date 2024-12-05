@@ -6,6 +6,7 @@ import profile from "../../svg/profile.svg";
 import email from "../../svg/email.svg";
 import number from "../../svg/number.svg";
 import gender from "../../svg/gender.svg";
+import ProfilePhoto from "../../images/user.png"
 
 const UserCard = ({ user }) => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const UserCard = ({ user }) => {
 
   return (
     <div className="user-card" onClick={handleCardClick}>
-      <img src={user.avatar} alt={user.name} className="user-avatar" />
+      <img src={user.profilePhoto || ProfilePhoto} alt={user.name} className="user-avatar" />
       <h3>{user.name}</h3>
       <div className="user-card-group">
         <IconAndText title={user.fio} icon={profile} />

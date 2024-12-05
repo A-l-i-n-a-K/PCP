@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";  // Импортируем axios для запросов
 
 const SportsmanPage = () => {
+  const { sportsmanId } = useParams();
   const { id } = useParams();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,7 @@ const SportsmanPage = () => {
   // Загружаем данные профиля спортсмена
   const fetchUserData = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/Profile/${id}`);
+      const response = await axios.get(`http://localhost:8080/Profile/${sportsmanId}`);
       setUserData(response.data);
     } catch (error) {
       setError("Ошибка при загрузке данных спортсмена");
@@ -32,7 +33,7 @@ const SportsmanPage = () => {
   const fetchTableData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/sportsmanData/datas?sportsmanId=${id}`
+        `http://localhost:8080/sportsmanData/datas?sportsmanId=${sportsmanId}`
       );
       setTableData(response.data); // Сохраняем данные таблицы
     } catch (error) {
@@ -43,10 +44,10 @@ const SportsmanPage = () => {
   useEffect(() => {
     fetchUserData();
     fetchTableData();
-  }, [id]);
+  }, [sportsmanId]);
 
   const onClick = () => {
-    navigate(`/analysisSportsman/${userData.id}`);
+    navigate(`/analysisSportsman/${id}/${sportsmanId}`);
   };
 
   if (loading) {
